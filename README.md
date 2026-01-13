@@ -1,5 +1,6 @@
-# OpenRank Visualization Platform: LLM Ecosystem Health Overview
-# 🚀 OpenRank 可视化平台：LLM 生态健康度总览
+<h1 align="center">OpenRank Visualization Platform: LLM Ecosystem Health Overview</h1>
+<p align="center">🚀 OpenRank 可视化平台：LLM 生态健康度总览</p>
+<br/>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.9%2B-blue?style=flat-square&logo=python" alt="Python">
@@ -168,8 +169,9 @@ return Response(generate(), mimetype='text/event-stream')
 
 
 ### 2. AI 流式打字机 (Streaming Typing)
-> <img src="./assets/9.png" alt="AI 流式打字机交互截图" width="720" />
-> 能够看到 AI 逐字生成的思考过程，体验极致丝滑。  
+<p align="center">
+  <img src="./assets/9.png" alt="AI 流式打字机交互截图" width="720" />
+</p>
 
 
 ## 🚀 快速部署 (Deployment)
@@ -231,11 +233,11 @@ npm run dev
 
 后端支持通过环境变量进行高级配置：
 
+| 变量名 | 描述 | 默认值 |
 |---|---|---|
-|变量名|描述|默认值|
-|OPENAI_API_KEY|OpenAI 接口密钥 (用于 AI 分析)|无|
-|FLASK_ENV|运行环境 (development/production)|development|
-|PORT|后端服务端口|8000|
+| OPENAI_API_KEY | OpenAI 接口密钥（用于 AI 分析） | 无 |
+| FLASK_ENV | 运行环境（development/production） | development |
+| PORT | 后端服务端口 | 8000 |
 ## 🗺️ 开发路线 (Roadmap)
 
 **Phase 1: 基础构建**
