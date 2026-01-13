@@ -197,9 +197,9 @@ cd openrank2
 ### 2. 后端配置 (Backend)
 
 服务默认端口：8000
+```
 cd backend
 
-```
 1. 创建虚拟环境 (隔离依赖，推荐)
 python -m venv .venv
  Windows:
