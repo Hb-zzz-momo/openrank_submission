@@ -133,25 +133,25 @@ return Response(generate(), mimetype='text/event-stream')
 > *以下界面展示了平台的核心功能。*
 
 ### 1. 生态榜单与多维对比
-![生态榜单与多维对比截图](/assets/1.png)
+<img src="./assets/3.png" alt="生态榜单与多维对比截图" width="720" />
 
 *实现多项目数据对比与排行榜*
 
 
 ### 2. AI 流式打字机交互
-![AI 流式打字机交互截图](/assets/4.png)
+<img src="./assets/4.png" alt="AI 流式打字机交互截图" width="720" />
 *实现丝滑的 AI 逐字生成效果*
 
 ### 3. 数据概览仪表盘
-![数据概览仪表盘截图](/assets/1.png)
+<img src="./assets/1.png" alt="数据概览仪表盘截图" width="720" />
 *实时展示 OpenRank 趋势与核心指标变化。*
 
 ### 4. AI 智能分析界面
-![AI 智能分析界面截图](/assets/2.png)
+<img src="./assets/2.png" alt="AI 智能分析界面截图" width="720" />
 *基于 LLM 的项目健康度诊断报告生成。*
 
 ### 5. 智能风险卡片
-![智能风险卡片截图](/assets/8.png)
+<img src="./assets/8.png" alt="智能风险卡片截图" width="720" />
 *自动识别项目潜在风险*
 
 
@@ -164,15 +164,11 @@ return Response(generate(), mimetype='text/event-stream')
 
 > 简洁美观的登录界面，集成表单验证与错误提示。登录后 Token 自动持久化，刷新不丢失。  
 > 
-> ![登录界面截图](/assets/5.png)
+> <img src="./assets/5.png" alt="登录界面截图" width="720" />
 
-### 2. 动态数据大屏 (Dynamic Dashboard)
-> 集成 ECharts 绘制图表，数据源可动态切换。
-> ECharts 图表随数据源动态刷新，支持暗色模式自适应。  
-> ![动态数据大屏截图](/assets/3.png)
 
-### 3. AI 流式打字机 (Streaming Typing)
-
+### 2. AI 流式打字机 (Streaming Typing)
+> <img src="./assets/demo3.png" alt="AI 流式打字机交互截图" width="720" />
 > 能够看到 AI 逐字生成的思考过程，体验极致丝滑。  
 
 
@@ -198,21 +194,21 @@ cd openrank2
 cd backend
 
 ```
-# 1. 创建虚拟环境 (隔离依赖，推荐)
+1. 创建虚拟环境 (隔离依赖，推荐)
 python -m venv .venv
-# Windows:
+ Windows:
 .\.venv\Scripts\activate
-# Linux/Mac:
-# source .venv/bin/activate
+Linux/Mac:
+source .venv/bin/activate
 
-# 2. 安装依赖
+2. 安装依赖
 pip install -r requirements.txt
 
-# 3. 环境变量配置 (Windows PowerShell 示例)
-# 如果需要使用 LLM 功能，请设置 Key，否则仅可使用基础数据功能
+3. 环境变量配置 (Windows PowerShell 示例)
+如果需要使用 LLM 功能，请设置 Key，否则仅可使用基础数据功能
 $env:OPENAI_API_KEY="sk-xxxxxxxxxxxxxxxxxxxxxxxx"
 
-# 4. 启动服务
+4. 启动服务
 python main.py
 ```
 ### 3. 前端配置 (Frontend)
@@ -222,10 +218,10 @@ python main.py
 ```
 cd frontend
 
-#1. 安装依赖
+1. 安装依赖
 npm install
 
-#2. 启动开发服务器
+2. 启动开发服务器
 npm run dev
 
 访问浏览器：http://localhost:5173 即可体验完整功能。
@@ -235,7 +231,6 @@ npm run dev
 
 后端支持通过环境变量进行高级配置：
 
-|   |   |   |
 |---|---|---|
 |变量名|描述|默认值|
 |OPENAI_API_KEY|OpenAI 接口密钥 (用于 AI 分析)|无|
@@ -245,27 +240,26 @@ npm run dev
 
 **Phase 1: 基础构建**
 
-完成 OpenRank 数据采集管道
+✅完成 OpenRank 数据采集管道
 
-搭建 Vue3 + Flask 基础框架
+✅搭建 Vue3 + Flask 基础框架
 
-实现基础 ECharts 可视化
+✅实现基础 ECharts 可视化
 
 **Phase 2: 智能化升级 (Current)**
 
-接入 OpenAI API
+✅接入 OpenAI API
 
-实现项目健康度自动生成报告
+✅实现项目健康度自动生成报告
 
-增加 API 限流保护
+✅增加 API 限流保护
 
 **Phase 3: 社区化与扩展 (Future)**
 
-支持更多 LLM 模型 (Claude, 文心一言)
+✅支持更多 LLM 模型 (Claude, 文心一言)
 
-增加多项目对比分析功能
+✅增加多项目对比分析功能
 
-导出 PDF 格式分析报告
 
 ## ❓ 常见问题 (FAQ)
 
