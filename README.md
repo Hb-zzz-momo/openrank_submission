@@ -168,7 +168,7 @@ return Response(generate(), mimetype='text/event-stream')
 
 
 ### 2. AI 流式打字机 (Streaming Typing)
-> <img src="./assets/demo3.png" alt="AI 流式打字机交互截图" width="720" />
+> <img src="./assets/9.png" alt="AI 流式打字机交互截图" width="720" />
 > 能够看到 AI 逐字生成的思考过程，体验极致丝滑。  
 
 
