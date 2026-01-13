@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <strong>融合 OpenRank 算法模型与 OpenAI 智能分析的开源生态可视化解决方案</strong>
+  <strong>融合 OpenRank 评分模型 与 OpenDigger 数据指标，并引入 LLM 智能分析 的开源生态可视化平台</strong>
 </p>
 
 <p align="center">
