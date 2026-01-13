@@ -133,7 +133,7 @@ return Response(generate(), mimetype='text/event-stream')
 > *以下界面展示了平台的核心功能。*
 
 ### 1. 生态榜单与多维对比
-![生态榜单与多维对比截图](/assets/6.png)
+![生态榜单与多维对比截图](/assets/1.png)
 
 *实现多项目数据对比与排行榜*
 
