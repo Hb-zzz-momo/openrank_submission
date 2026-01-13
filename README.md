@@ -141,18 +141,22 @@ return Response(generate(), mimetype='text/event-stream')
 
 ### 2. AI 流式打字机交互
 <img src="./assets/4.png" alt="AI 流式打字机交互截图" width="720" />
+
 *实现丝滑的 AI 逐字生成效果*
 
 ### 3. 数据概览仪表盘
 <img src="./assets/1.png" alt="数据概览仪表盘截图" width="720" />
+
 *实时展示 OpenRank 趋势与核心指标变化。*
 
 ### 4. AI 智能分析界面
 <img src="./assets/2.png" alt="AI 智能分析界面截图" width="720" />
+
 *基于 LLM 的项目健康度诊断报告生成。*
 
 ### 5. 智能风险卡片
 <img src="./assets/8.png" alt="智能风险卡片截图" width="720" />
+
 *自动识别项目潜在风险*
 
 
