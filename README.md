@@ -88,6 +88,7 @@ graph TD
 - **数据层**：后端通过定时任务（Crontab）预计算排名数据存入 SQLite，接口响应速度 < 50ms。
 ```
 
+
 ## 💻 代码架构深度解析 (Code Analysis)
 
 ### 📂 后端结构 (/backend)
@@ -127,25 +128,6 @@ return Response(generate(), mimetype='text/event-stream')
     
     - 使用 reader.read() 循环读取数据流，实现字符级的实时上屏。
 
-## 📸 UI/UX 交互亮点 (Showcase)
-
-### 1. 登录与持久化 (Authentication)
-
-> 简洁美观的登录界面，集成表单验证与错误提示。登录后 Token 自动持久化，刷新不丢失。  
-> 
-> ![alt text](./assets/login_demo.png)
-
-### 2. 动态数据大屏 (Dynamic Dashboard)
-
-> ECharts 图表随数据源动态刷新，支持暗色模式自适应。  
-> 
-> ![alt text](./assets/dashboard_demo.png)
-
-### 3. AI 流式打字机 (Streaming Typing)
-
-> 能够看到 AI 逐字生成的思考过程，体验极致丝滑。  
-> 
-> ![alt text](./assets/ai_stream_demo.gif)
 
 ## 📸 作品展示 (Showcase)
 > *以下界面展示了平台的核心功能。*
@@ -162,7 +144,7 @@ return Response(generate(), mimetype='text/event-stream')
 实现丝滑的 AI 逐字生成效果
 
 ### 3. 数据概览仪表盘
-![[dce8129a0e890768f5fb4680f44f3ae1.png]]
+./assets/1.png
 *实时展示 OpenRank 趋势与核心指标变化。*
 
 ### 4. AI 智能分析界面
@@ -176,6 +158,24 @@ return Response(generate(), mimetype='text/event-stream')
 
 
 (注：实际运行效果动态图演示即将上线)
+
+## 📸 UI/UX 交互亮点 (Showcase)
+
+### 1. 登录与持久化 (Authentication)
+
+> 简洁美观的登录界面，集成表单验证与错误提示。登录后 Token 自动持久化，刷新不丢失。  
+> 
+> ![alt text](./assets/login_demo.png)
+
+### 2. 动态数据大屏 (Dynamic Dashboard)
+
+> ECharts 图表随数据源动态刷新，支持暗色模式自适应。  
+
+
+### 3. AI 流式打字机 (Streaming Typing)
+
+> 能够看到 AI 逐字生成的思考过程，体验极致丝滑。  
+
 
 ## 🚀 快速部署 (Deployment)
 
