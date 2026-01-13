@@ -32,28 +32,97 @@
           <component :is="Component" :key="route.fullPath" />
         </template>
       </router-view>
+      
     </main>
+        <!-- 鼠标跟随品牌标识（情况B） -->
+    <div
+      v-if="showCursorBrand"
+      ref="cursorBrandEl"
+      class="cursor-brand"
+      aria-hidden="true"
+    >
+      OPENRANK
+    </div>
+
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
-import { useAuthStore } from './stores/auth'
-import { watch, nextTick } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
-const route = useRoute()
+import { useAuthStore } from './stores/auth'
 
+const route = useRoute()
+const auth = useAuthStore()
+
+/* ========= 你原来的：切换路由后触发 resize（给 ECharts 用） ========= */
 watch(() => route.fullPath, async () => {
   await nextTick()
   window.dispatchEvent(new Event('resize'))
 })
 
-const auth = useAuthStore()
-onMounted(async() => {
+onMounted(async () => {
   auth.loadFromStorage()  // 刷新后恢复登录状态
   await auth.fetchMe()
 })
+
+/* ========= 情况B：鼠标跟随 OPENRANK ========= */
+const cursorBrandEl = ref(null)
+const showCursorBrand = ref(true)
+
+const isTouchDevice = () =>
+  'ontouchstart' in window || navigator.maxTouchPoints > 0
+
+let rafId = 0
+let lastX = 0
+let lastY = 0
+
+const onMouseMove = (e) => {
+  lastX = e.clientX
+  lastY = e.clientY
+
+  // 用 requestAnimationFrame 合并高频事件，避免抖动/性能浪费
+  if (rafId) return
+  rafId = window.requestAnimationFrame(() => {
+    rafId = 0
+    const el = cursorBrandEl.value
+    if (!el) return
+
+    // 让标识在鼠标右下角一点，避免挡住指针
+    const offsetX = 15
+    const offsetY = 15
+    el.style.transform = `translate(${lastX + offsetX}px, ${lastY + offsetY}px)`
+  })
+}
+
+// 只在“非登录/注册页”显示
+watch(() => route.path, (p) => {
+  showCursorBrand.value = !['/login', '/register'].includes(p)
+}, { immediate: true })
+
+onMounted(() => {
+  // 移动端不显示，避免奇怪的触控体验
+  if (isTouchDevice()) {
+    showCursorBrand.value = false
+    return
+  }
+
+  // 如果系统偏好减少动画，也不显示
+  const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches
+  if (prefersReduced) {
+    showCursorBrand.value = false
+    return
+  }
+
+  window.addEventListener('mousemove', onMouseMove, { passive: true })
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('mousemove', onMouseMove)
+  if (rafId) cancelAnimationFrame(rafId)
+})
 </script>
+
 
 <style scoped>
 .app-layout {
@@ -135,4 +204,32 @@ onMounted(async() => {
   font-size: 13px;
   cursor: pointer;
 }
+/* ===== 鼠标跟随品牌标识（情况B） ===== */
+.cursor-brand{
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2000;            /* 比 header(1000) 更高 */
+
+  pointer-events: none;     /* ✅不挡点击 */
+  user-select: none;
+
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+
+  color: rgba(255, 255, 255, 0.55);
+  text-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
+
+  transform: translate(-9999px, -9999px);
+
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(6px);
+
+  transition: none
+}
+
 </style>
