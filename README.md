@@ -55,7 +55,7 @@ graph TD
     Frontend -->|Render| ECharts[ECharts 可视化]
 ```
 ## ✨ 核心亮点 (Key Features)
-```
+
 ### 1. 🆚 多维对比分析系统
 
 - **功能描述**：支持同时选取多个开源项目，在同一坐标系下进行 OpenRank、活跃度、Issue 响应速度的对比。
@@ -86,7 +86,7 @@ graph TD
 - **功能描述**：内置 LLM 生态健康度排行榜，支持按 OpenRank、Fork 数、活跃度实时排序。
     
 - **数据层**：后端通过定时任务（Crontab）预计算排名数据存入 SQLite，接口响应速度 < 50ms。
-```
+
 
 
 ## 💻 代码架构深度解析 (Code Analysis)
@@ -133,27 +133,26 @@ return Response(generate(), mimetype='text/event-stream')
 > *以下界面展示了平台的核心功能。*
 
 ### 1. 生态榜单与多维对比
+![生态榜单与多维对比截图](/assets/6.png)
 
-
-实现多项目数据对比与排行榜
+*实现多项目数据对比与排行榜*
 
 
 ### 2. AI 流式打字机交互
-
-
-实现丝滑的 AI 逐字生成效果
+![AI 流式打字机交互截图](/assets/4.png)
+*实现丝滑的 AI 逐字生成效果*
 
 ### 3. 数据概览仪表盘
-./assets/1.png
+![数据概览仪表盘截图](/assets/1.png)
 *实时展示 OpenRank 趋势与核心指标变化。*
 
 ### 4. AI 智能分析界面
-![[bc254dbb82d6d197193a6eb8de5eb8a4.png]]
+![AI 智能分析界面截图](/assets/2.png)
 *基于 LLM 的项目健康度诊断报告生成。*
 
 ### 5. 智能风险卡片
-
-自动识别项目潜在风险
+![智能风险卡片截图](/assets/8.png)
+*自动识别项目潜在风险*
 
 
 
@@ -165,12 +164,12 @@ return Response(generate(), mimetype='text/event-stream')
 
 > 简洁美观的登录界面，集成表单验证与错误提示。登录后 Token 自动持久化，刷新不丢失。  
 > 
-> ![alt text](./assets/login_demo.png)
+> ![登录界面截图](/assets/5.png)
 
 ### 2. 动态数据大屏 (Dynamic Dashboard)
-
+> 集成 ECharts 绘制图表，数据源可动态切换。
 > ECharts 图表随数据源动态刷新，支持暗色模式自适应。  
-
+> ![动态数据大屏截图](/assets/3.png)
 
 ### 3. AI 流式打字机 (Streaming Typing)
 
