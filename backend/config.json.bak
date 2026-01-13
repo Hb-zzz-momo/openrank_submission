@@ -1,0 +1,391 @@
+{
+  "repositories": [
+    {
+      "platform": "github",
+      "org": "pytorch",
+      "repo": "pytorch",
+      "category": "training_framework"
+    },
+    {
+      "platform": "github",
+      "org": "huggingface",
+      "repo": "transformers",
+      "category": "llm_framework"
+    },
+    {
+      "platform": "github",
+      "org": "langchain-ai",
+      "repo": "langchain",
+      "category": "llm_app_framework"
+    },
+    {
+      "platform": "github",
+      "org": "vllm-project",
+      "repo": "vllm",
+      "category": "inference_engine"
+    },
+    {
+      "platform": "github",
+      "org": "run-llama",
+      "repo": "llama_index",
+      "category": "llm_app_framework"
+    },
+    {
+      "platform": "github",
+      "org": "ollama",
+      "repo": "ollama",
+      "category": "inference_engine"
+    },
+    {
+      "platform": "github",
+      "org": "ggerganov",
+      "repo": "llama.cpp",
+      "category": "inference_engine"
+    },
+    {
+      "platform": "github",
+      "org": "deepseek-ai",
+      "repo": "DeepSeek-Coder",
+      "category": "code_model"
+    },
+    {
+      "platform": "github",
+      "org": "QwenLM",
+      "repo": "Qwen",
+      "category": "foundation_model"
+    },
+    {
+      "platform": "github",
+      "org": "mistralai",
+      "repo": "mistral-src",
+      "category": "foundation_model"
+    },
+    {
+      "platform": "github",
+      "org": "langfuse",
+      "repo": "langfuse",
+      "category": "observability"
+    },
+    {
+      "platform": "github",
+      "org": "milvus-io",
+      "repo": "milvus",
+      "category": "vector_database"
+    },
+    {
+      "platform": "github",
+      "org": "qdrant",
+      "repo": "qdrant",
+      "category": "vector_database"
+    },
+    {
+      "platform": "github",
+      "org": "langgenius",
+      "repo": "dify",
+      "category": "low_code_platform"
+    },
+    {
+      "platform": "github",
+      "org": "infiniflow",
+      "repo": "ragflow",
+      "category": "low_code_platform"
+    },
+    {
+      "platform": "github",
+      "org": "microsoft",
+      "repo": "autogen",
+      "category": "multi_agent"
+    },
+    {
+      "platform": "github",
+      "org": "joaomdmoura",
+      "repo": "crewAI",
+      "category": "multi_agent"
+    },
+    {
+      "platform": "github",
+      "org": "deepset-ai",
+      "repo": "haystack",
+      "category": "llm_app_framework"
+    },
+    {
+      "platform": "github",
+      "org": "microsoft",
+      "repo": "DeepSpeed",
+      "category": "training_framework"
+    },
+    {
+      "platform": "github",
+      "org": "huggingface",
+      "repo": "peft",
+      "category": "training_framework"
+    },
+    {
+      "platform": "github",
+      "org": "meta-llama",
+      "repo": "llama3",
+      "category": "foundation_model"
+    },
+    {
+      "platform": "github",
+      "org": "google",
+      "repo": "gemma_pytorch",
+      "category": "foundation_model"
+    },
+    {
+      "platform": "github",
+      "org": "lm-sys",
+      "repo": "FastChat",
+      "category": "inference_engine"
+    },
+    {
+      "platform": "github",
+      "org": "sgl-project",
+      "repo": "sglang",
+      "category": "inference_engine"
+    },
+    {
+      "platform": "github",
+      "org": "ray-project",
+      "repo": "ray",
+      "category": "distributed_training"
+    },
+    {
+      "platform": "github",
+      "org": "unslothai",
+      "repo": "unsloth",
+      "category": "training_framework"
+    },
+    {
+      "platform": "github",
+      "org": "hiyouga",
+      "repo": "LLaMA-Factory",
+      "category": "training_framework"
+    },
+    {
+      "platform": "github",
+      "org": "huggingface",
+      "repo": "datasets",
+      "category": "data_processing"
+    },
+    {
+      "platform": "github",
+      "org": "Unstructured-IO",
+      "repo": "unstructured",
+      "category": "data_processing"
+    },
+    {
+      "platform": "github",
+      "org": "haotian-liu",
+      "repo": "LLaVA",
+      "category": "multimodal_model"
+    },
+    {
+      "platform": "github",
+      "org": "QwenLM",
+      "repo": "Qwen-VL",
+      "category": "multimodal_model"
+    },
+    {
+      "platform": "github",
+      "org": "OpenBMB",
+      "repo": "MiniCPM-V",
+      "category": "multimodal_model"
+    },
+    {
+      "platform": "github",
+      "org": "NVIDIA",
+      "repo": "TensorRT-LLM",
+      "category": "inference_engine"
+    },
+    {
+      "platform": "github",
+      "org": "BerriAI",
+      "repo": "litellm",
+      "category": "inference_engine"
+    },
+    {
+      "platform": "github",
+      "org": "h2oai",
+      "repo": "h2ogpt",
+      "category": "llm_app_framework"
+    },
+    {
+      "platform": "github",
+      "org": "weaviate",
+      "repo": "weaviate",
+      "category": "vector_database"
+    },
+    {
+      "platform": "github",
+      "org": "chroma-core",
+      "repo": "chroma",
+      "category": "vector_database"
+    },
+    {
+      "platform": "github",
+      "org": "PaddlePaddle",
+      "repo": "PaddleNLP",
+      "category": "llm_framework"
+    },
+    {
+      "platform": "github",
+      "org": "bigcode-project",
+      "repo": "starcoder",
+      "category": "code_model"
+    }
+  ],
+  "category_tree": [
+    {
+      "label": "AI 基础设施",
+      "value": "ai_infra",
+      "children": [
+        {
+          "label": "训练框架",
+          "value": "training_framework",
+          "children": [
+            { "label": "PyTorch", "value": "pytorch/pytorch", "description": "最流行的深度学习框架" },
+            { "label": "DeepSpeed", "value": "microsoft/DeepSpeed", "description": "微软的分布式训练优化库" },
+            { "label": "PEFT", "value": "huggingface/peft", "description": "参数高效微调工具" },
+            { "label": "Unsloth", "value": "unslothai/unsloth", "description": "快速 LLM 微调框架" },
+            { "label": "LLaMA-Factory", "value": "hiyouga/LLaMA-Factory", "description": "大模型一键微调工具" }
+          ]
+        },
+        {
+          "label": "推理引擎",
+          "value": "inference_engine",
+          "children": [
+            { "label": "vLLM", "value": "vllm-project/vllm", "description": "高吞吐量 LLM 推理引擎" },
+            { "label": "Ollama", "value": "ollama/ollama", "description": "本地运行大模型的最简单方式" },
+            { "label": "llama.cpp", "value": "ggerganov/llama.cpp", "description": "纯 C++ 实现的 LLaMA 推理" },
+            { "label": "SGLang", "value": "sgl-project/sglang", "description": "快速且灵活的大模型推理引擎" },
+            { "label": "FastChat", "value": "lm-sys/FastChat", "description": "训练、部署和评估聊天模型的平台" },
+            { "label": "TensorRT-LLM", "value": "NVIDIA/TensorRT-LLM", "description": "NVIDIA 的高性能推理引擎" },
+            { "label": "LiteLLM", "value": "BerriAI/litellm", "description": "统一 100+ LLM API 的调用接口" }
+          ]
+        },
+        {
+          "label": "分布式训练",
+          "value": "distributed_training",
+          "children": [
+            { "label": "Ray", "value": "ray-project/ray", "description": "分布式计算框架" }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "基础模型",
+      "value": "foundation_models",
+      "children": [
+        {
+          "label": "通用大模型",
+          "value": "foundation_model",
+          "children": [
+            { "label": "LLaMA 3", "value": "meta-llama/llama3", "description": "Meta 开源的旗舰大模型" },
+            { "label": "Qwen", "value": "QwenLM/Qwen", "description": "阿里通义千问开源模型" },
+            { "label": "Mistral", "value": "mistralai/mistral-src", "description": "欧洲最强开源大模型" },
+            { "label": "Gemma", "value": "google/gemma_pytorch", "description": "Google 开源的轻量级模型" },
+            { "label": "ChatGLM3", "value": "THUDM/ChatGLM3", "description": "清华 ChatGLM 系列" }
+          ]
+        },
+        {
+          "label": "代码模型",
+          "value": "code_model",
+          "children": [
+            { "label": "DeepSeek-Coder", "value": "deepseek-ai/DeepSeek-Coder", "description": "代码生成专用模型" },
+            { "label": "StarCoder", "value": "bigcode-project/starcoder", "description": "BigCode 开源代码模型" }
+          ]
+        },
+        {
+          "label": "多模态模型",
+          "value": "multimodal_model",
+          "children": [
+            { "label": "LLaVA", "value": "haotian-liu/LLaVA", "description": "视觉语言大模型" },
+            { "label": "Qwen-VL", "value": "QwenLM/Qwen-VL", "description": "通义千问视觉语言模型" },
+            { "label": "MiniCPM-V", "value": "OpenBMB/MiniCPM-V", "description": "轻量级多模态模型" }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "AI Agent 框架",
+      "value": "ai_agent",
+      "children": [
+        {
+          "label": "RAG 框架",
+          "value": "llm_app_framework",
+          "children": [
+            { "label": "LangChain", "value": "langchain-ai/langchain", "description": "最流行的 LLM 应用开发框架" },
+            { "label": "LlamaIndex", "value": "run-llama/llama_index", "description": "数据驱动的 LLM 应用框架" },
+            { "label": "Haystack", "value": "deepset-ai/haystack", "description": "端到端 NLP 框架" },
+            { "label": "Transformers", "value": "huggingface/transformers", "description": "HuggingFace 核心库" },
+            { "label": "H2OGPT", "value": "h2oai/h2ogpt", "description": "H2O.ai 的 GPT 应用框架" },
+            { "label": "PaddleNLP", "value": "PaddlePaddle/PaddleNLP", "description": "飞桨 NLP 工具库" }
+          ]
+        },
+        {
+          "label": "低代码平台",
+          "value": "low_code_platform",
+          "children": [
+            { "label": "Dify", "value": "langgenius/dify", "description": "可视化 LLM 应用搭建平台" },
+            { "label": "RAGFlow", "value": "infiniflow/ragflow", "description": "基于深度文档理解的 RAG 引擎" }
+          ]
+        },
+        {
+          "label": "多 Agent 系统",
+          "value": "multi_agent",
+          "children": [
+            { "label": "AutoGen", "value": "microsoft/autogen", "description": "微软的多智能体框架" },
+            { "label": "CrewAI", "value": "joaomdmoura/crewAI", "description": "角色驱动的 AI Agent 协作框架" }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "AI 数据处理",
+      "value": "ai_data",
+      "children": [
+        {
+          "label": "向量数据库",
+          "value": "vector_database",
+          "children": [
+            { "label": "Milvus", "value": "milvus-io/milvus", "description": "高性能向量数据库" },
+            { "label": "Qdrant", "value": "qdrant/qdrant", "description": "Rust 实现的向量搜索引擎" },
+            { "label": "Weaviate", "value": "weaviate/weaviate", "description": "云原生向量数据库" },
+            { "label": "Chroma", "value": "chroma-core/chroma", "description": "轻量级向量数据库" }
+          ]
+        },
+        {
+          "label": "数据处理",
+          "value": "data_processing",
+          "children": [
+            { "label": "Datasets", "value": "huggingface/datasets", "description": "HuggingFace 数据集库" },
+            { "label": "Unstructured", "value": "Unstructured-IO/unstructured", "description": "非结构化数据处理工具" }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "可观测性",
+      "value": "observability",
+      "children": [
+        {
+          "label": "监控调试",
+          "value": "observability",
+          "children": [
+            { "label": "Langfuse", "value": "langfuse/langfuse", "description": "LLM 应用可观测平台" }
+          ]
+        }
+      ]
+    }
+  ],
+  "metrics": [
+    "openrank",
+    "activity",
+    "stars",
+    "participants"
+  ],
+  "data_source": {
+    "base_url": "https://oss.open-digger.cn/{platform}/{org}/{repo}/{metric}.json"
+  }
+}

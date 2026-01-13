@@ -1,0 +1,11 @@
+Flask
+Flask-Cors
+flask_sqlalchemy
+flask-jwt-extended
+requests
+pydantic    # 如果你部分地方还想继续用 Pydantic 做数据校验，可保留
+openai      # 你现在用的 LLM 接口
+pandas
+python-dotenv
+stats_utils
+matplotlib
