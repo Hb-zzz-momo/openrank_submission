@@ -6,7 +6,7 @@ import axios from 'axios'
 // ================== 1. 创建 axios 实例 ==================
 const http = axios.create({
   baseURL: 'http://127.0.0.1:8000',   // 现在后端是 Flask，端口 8000
-  timeout: 15000,
+  timeout: 30000,
   headers: {
     'Content-Type': 'application/json'
   }

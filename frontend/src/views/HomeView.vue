@@ -131,13 +131,22 @@
               </button>
             </div>
 
-            <button
-              class="report-btn"
-              :disabled="!radarData.length || reportLoading"
-              @click="generateReport"
-            >
-              {{ reportLoading ? '生成中…' : '生成智能分析' }}
-            </button>
+            <div class="report-controls">
+              <select v-model="reportTone" class="tone-select" :disabled="reportLoading">
+                <option v-for="opt in reportToneOptions" :key="opt.value" :value="opt.value">
+                  {{ opt.label }}
+                </option>
+              </select>
+
+              <button
+                class="report-btn"
+                :disabled="!radarData.length || reportLoading"
+                @click="generateReport"
+              >
+                {{ reportLoading ? '生成中…' : '生成智能分析' }}
+              </button>
+            </div>
+
           </div>
 
           <!-- 雷达图视图 -->
@@ -350,7 +359,7 @@
     <transition name="modal-fade">
       <div v-if="reportDrawerOpen" class="analysis-modal-overlay" @click.self="reportDrawerOpen = false">
         
-        <div class="analysis-modal">
+        <div class="analysis-modal" :class="{ fullscreen: reportFullscreen }">
           <!-- 1. 顶部 Header -->
           <div class="modal-header">
             <div class="header-left">
@@ -358,13 +367,27 @@
               <h2 class="header-title">LLM 生态对比分析报告</h2>
             </div>
             <div class="header-right">
-              <span class="report-meta">基于 OpenDigger 数据深度分析 | {{ radarData.length }} 个项目对比</span>
-              <button class="modal-close-btn" @click="reportDrawerOpen = false">×</button>
+              <span class="report-meta">
+                基于 OpenDigger 数据深度分析 | 模式：{{ reportToneLabel }} | {{ radarData.length }} 个项目对比
+              </span>
+
+              <!-- ✅ 新增：全屏阅读/还原按钮 -->
+              <button
+                class="modal-max-btn"
+                @click="toggleReportFullscreen"
+                :title="reportFullscreen ? '退出全屏阅读' : '全屏阅读（放大右侧报告）'"
+              >
+                {{ reportFullscreen ? '🗗' : '🗖' }}
+              </button>
+
+              <button class="modal-close-btn" @click="closeReportModal">×</button>
             </div>
+
           </div>
 
           <!-- 2. 内容主体 -->
-          <div class="modal-body">
+          <div class="modal-body" :class="{ 'report-only': reportFullscreen }">
+
             
             <!-- ======= 左侧：图表展示区 (雷达图) ======= -->
             <div class="chart-section">
@@ -463,6 +486,22 @@
                     </table>
                   </div>
                 </div>
+                <!-- 卡片2.5: 贡献者健康预警（Bus Factor） -->
+                <div class="report-card">
+                  <div class="card-header">
+                    <div class="header-icon">🧑‍💻</div>
+                    <h4>贡献者健康预警（Bus Factor）</h4>
+                  </div>
+
+                  <div class="risk-grid">
+                    <ContributorRiskCard
+                      v-for="id in selectedIds"
+                      :key="id"
+                      :project="id"
+                      platform="github"
+                    />
+                  </div>
+                </div>
 
                 <!-- 卡片3: 关键发现 -->
                 <div class="report-card">
@@ -514,10 +553,44 @@ import { useFavoritesStore } from '@/stores/favorites'
 import { useAuthStore } from '@/stores/auth'
 import { onMounted, computed, watch, ref } from 'vue'
 import MarkdownIt from 'markdown-it'
+import ContributorRiskCard from '../components/ContributorRiskCard.vue'
+
 const reportDrawerOpen = ref(false)
 const reportLoading = ref(false)
 const reportText = ref('')
 const reportError = ref('')
+const REPORT_TONE_STORAGE_KEY = 'openrank_report_tone'
+
+const reportToneOptions = [
+  { value: 'pro',      label: '📊 专业分析' },
+  { value: 'cto',      label: '🧠 CTO 尽调' },
+  { value: 'investor', label: '💰 投资人视角' },
+  { value: 'audit',    label: '⚡ 挑刺审计（毒舌但专业）' }
+]
+
+const reportTone = ref(localStorage.getItem(REPORT_TONE_STORAGE_KEY) || 'pro')
+
+watch(reportTone, (v) => {
+  localStorage.setItem(REPORT_TONE_STORAGE_KEY, v)
+})
+
+const reportToneLabel = computed(() => {
+  return reportToneOptions.find(o => o.value === reportTone.value)?.label || '📊 专业分析'
+})
+
+const reportFullscreen = ref(false)
+
+// ✅ 点击最大化按钮：切换阅读模式
+const toggleReportFullscreen = () => {
+  reportFullscreen.value = !reportFullscreen.value
+}
+
+// ✅ 关闭弹窗：顺便退出全屏（避免下次打开还是全屏）
+const closeReportModal = () => {
+  reportDrawerOpen.value = false
+  reportFullscreen.value = false
+}
+
 // 创建Markdown解析器实例
 const md = new MarkdownIt({
   html: true,      // 允许HTML标签
@@ -1087,23 +1160,37 @@ const generateReport = async () => {
 
   try {
     const payload = {
+      tone: reportTone.value, // 告诉后端使用哪套提示词
       projects: radarData.value.map(item => ({
         repo: item.repo,
         metrics: item.metrics
       }))
     }
 
-    const res = await llmApi.getReport(payload)
+
+    const res = await Promise.race([
+      llmApi.getReport(payload),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('timeout')), 18000) // 18s 超时兜底
+      )
+    ])
+
     const rawReport = res.data.report || '（后端未返回报告内容）'
-    const full = `# 📊 ${radarData.value.length} 个项目生态深度对比\n\n` + rawReport
+    const full =
+      `### 📊 ${radarData.value.length} 个项目生态深度对比\n` +
+      `> 模式：${reportToneLabel.value}\n\n` +
+      rawReport
 
     // ✅ 打字机开始
     startTypewriter(full)
   } catch (e) {
     console.error('生成报告失败', e)
-    reportError.value = '生成报告失败，请稍后重试。'
+    reportError.value = (String(e?.message).includes('timeout'))
+      ? '生成超时：后端报告接口未在 18 秒内返回（已自动中止）。'
+      : '生成报告失败，请稍后重试。'
     reportLoading.value = false
   }
+
 }
 
 
@@ -2273,6 +2360,189 @@ const getScoreColor = (score) => {
 @keyframes blink{
   0%,50%{opacity:1}
   51%,100%{opacity:0}
+}
+.risk-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+/* ✅ Header 最大化按钮样式（仿窗口最大化） */
+.modal-max-btn{
+  font-size: 18px;
+  color: #94a3b8;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 8px;
+  transition: 0.2s;
+}
+.modal-max-btn:hover{
+  color: #fff;
+  transform: scale(1.08);
+}
+
+/* ✅ 全屏阅读模式：弹窗铺满 */
+.analysis-modal.fullscreen{
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  border-radius: 0;
+}
+
+/* ✅ 全屏阅读模式：只显示右侧报告 */
+.modal-body.report-only{
+  grid-template-columns: 1fr;
+}
+.analysis-modal.fullscreen .chart-section{
+  display: none;
+}
+
+/* ✅ 全屏阅读模式：右侧报告更宽松 + 字体更大 */
+.analysis-modal.fullscreen .report-section{
+  zoom: 1.22;              /* 建议 1.18 ~ 1.28 之间调 */
+  font-size: 16px;         /* 兜底：即使内部用 rem/em 也能正常 */
+  line-height: 1.75;
+}
+
+
+.analysis-modal.fullscreen .summary-desc p{ font-size: 15px; line-height: 1.8; }
+.analysis-modal.fullscreen .comp-table{ font-size: 15px; }
+.analysis-modal.fullscreen .mini-list{ font-size: 14px; line-height: 1.8; }
+.analysis-modal.fullscreen .ib-content p{ font-size: 14px; line-height: 1.7; }
+
+.analysis-modal.fullscreen .report-card{
+  padding: 18px 18px;
+}
+/* AI 文字预览区：放大+显示更多 */
+.analysis-modal.fullscreen .ai-text-preview{
+  font-size: 14px;
+  max-height: 60vh;
+}
+/* ✅ 标题/关键数值：明确放大 */
+.analysis-modal.fullscreen .report-section h3,
+.analysis-modal.fullscreen .report-section h4{
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.analysis-modal.fullscreen .summary-score{
+  font-size: 46px; /* 你截图里 0.49 那个分数 */
+}
+
+/* ✅ 右侧分析的正文（核心阅读区） */
+.analysis-modal.fullscreen .report-section p,
+.analysis-modal.fullscreen .report-section li{
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+/* ✅ 表格区（项目对比分析那块） */
+.analysis-modal.fullscreen .comp-table{
+  font-size: 15px;
+}
+.analysis-modal.fullscreen .comp-table th,
+.analysis-modal.fullscreen .comp-table td{
+  padding: 10px 12px;
+}
+
+/* ✅ badge/小标签：别小到看不清 */
+.analysis-modal.fullscreen .risk-badge,
+.analysis-modal.fullscreen .tag,
+.analysis-modal.fullscreen .pill{
+  font-size: 13px;
+  padding: 4px 10px;
+}
+
+/* ✅ AI 文本区：最容易觉得小，把它单独加大 */
+.analysis-modal.fullscreen .ai-text-preview{
+  font-size: 15px;
+  line-height: 1.85;
+  max-height: 62vh;
+}
+/* =========================
+   阅读增强：右侧报告区字体整体变大（含项目对比表格）
+   ========================= */
+
+/* 1) 默认弹窗：就让它达到“正常阅读” */
+.analysis-modal .report-section{
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+/* 项目对比分析表格（你截图这一块） */
+.analysis-modal .comp-table{
+  font-size: 15px;             /* 原来 13px */
+}
+.analysis-modal .comp-table th{
+  font-size: 14px;             /* 原来 12px 左右 */
+  padding-bottom: 14px;
+}
+.analysis-modal .comp-table td{
+  padding: 18px 0;             /* 原来 16px 0，行高更舒服 */
+}
+
+/* 项目名/组织名 */
+.analysis-modal .p-name{
+  font-size: 16px;             /* 原来 14px */
+  line-height: 1.3;
+}
+.analysis-modal .p-sub{
+  font-size: 13px;             /* 原来 11px */
+  margin-top: 4px;
+}
+
+/* 优势/风险列表 */
+.analysis-modal .mini-list{
+  font-size: 14px;             /* 原来 12px */
+  line-height: 1.8;
+}
+
+/* 分数 badge 也放大一点 */
+.analysis-modal .score-badge{
+  font-size: 14px;
+  padding: 4px 10px;           /* 原来 2px 8px */
+}
+
+/* 2) 全屏阅读模式：再大一档（如果你用了 fullscreen） */
+.analysis-modal.fullscreen .report-section{
+  font-size: 17px;
+}
+.analysis-modal.fullscreen .comp-table{
+  font-size: 17px;
+}
+.analysis-modal.fullscreen .mini-list{
+  font-size: 16px;
+}
+.analysis-modal.fullscreen .p-name{
+  font-size: 18px;
+}
+.analysis-modal.fullscreen .p-sub{
+  font-size: 14px;
+}
+.analysis-modal.fullscreen .score-badge{
+  font-size: 15px;
+}
+.report-controls{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.tone-select{
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  color: #e5e7eb;
+  font-size: 13px;
+  outline: none;
+}
+
+.tone-select:focus{
+  border-color: rgba(56, 189, 248, 0.55);
+  box-shadow: 0 0 0 3px rgba(56,189,248,0.12);
 }
 
 </style>
