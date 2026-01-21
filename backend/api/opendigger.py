@@ -11,7 +11,6 @@
 
 from flask import Blueprint, jsonify, request
 from pathlib import Path
-import os
 import json
 import requests
 import warnings
@@ -364,46 +363,20 @@ def get_llm_rank(metric: str):
 @rate_limit(max_requests=5, window_seconds=60)
 def generate_llm_report():
     """
-    根据前端传来的项目指标，生成一段报告（支持 tone 选择）。
-
+    根据前端传来的项目指标，生成一段“分析师风格”的文字报告。
     请求体结构：
       {
-        "tone": "pro|cto|investor|audit",
         "projects": [
-          { "repo": "pytorch/pytorch", "metrics": { "activity": 0.8, ... } }
+          { "repo": "pytorch/pytorch", "metrics": { "activity": 0.8, ... } },
+          ...
         ]
       }
     """
     payload = request.get_json(silent=True) or {}
     projects = payload.get("projects", [])
-    tone = (payload.get("tone") or "pro").strip().lower()
 
     if not projects:
         raise ApiException(400, "至少需要一个项目")
-
-    TONE_PRESETS = {
-        "pro": {
-            "desc": "专业、客观、面向评委，强调结论清晰与可行动建议",
-            "style": "专业、客观、见解独到，避免堆术语，面向非技术评委也能看懂。",
-            "ending": "建议从业务落地/生态稳健性角度给出选型建议。",
-        },
-        "cto": {
-            "desc": "CTO/技术负责人尽调：强调工程风险、可维护性、治理与长期演进",
-            "style": "你是 CTO 尽调视角：更关注治理、可持续性、贡献者结构风险、社区演进；给出工程化建议。",
-            "ending": "建议包含：技术债/社区治理/维护风险的规避策略。",
-        },
-        "investor": {
-            "desc": "投资人视角：强调护城河、风险、可持续增长与不确定性",
-            "style": "你是投资尽调视角：更关注风险敞口、可持续性与增长质量；结论要“能决策”。",
-            "ending": "建议给出：投/不投、押注/对冲、以及验证信号（下一步看什么指标）。",
-        },
-        "audit": {
-            "desc": "挑刺审计（毒舌但专业）：更尖锐地指出短板、踩坑点与最可能失败原因",
-            "style": "你是挑刺审计员：语气可以犀利，但必须专业、克制；只攻击问题不攻击人，不使用侮辱性表达。",
-            "ending": "建议要明确：最大风险点是什么、怎么补、以及若不补会怎样。",
-        }
-    }
-    preset = TONE_PRESETS.get(tone, TONE_PRESETS["pro"])
 
     # 1) 计算综合分
     enriched = []
@@ -413,9 +386,10 @@ def generate_llm_report():
         vals = list(metrics.values())
         score = sum(vals) / len(vals) if vals else 0.0
         enriched.append({"repo": repo, "metrics": metrics, "score": score})
+
     enriched.sort(key=lambda x: x["score"], reverse=True)
 
-    # 2) 数字总结
+    # 2) 数字总结（给 LLM & 规则模板 都用）
     summary_lines = []
     for idx, p in enumerate(enriched, start=1):
         m = p["metrics"]
@@ -429,74 +403,74 @@ def generate_llm_report():
         )
     numeric_summary = "\n".join(summary_lines)
 
-    BASE_SYSTEM_PROMPT = """
+    # 3) 如果配置了 OpenAI，则调用大模型写报告
+    if openai_client is not None:
+        try:
+            prompt = (
+                "下面是一组 LLM 相关开源项目在多个生态指标上的归一化得分（0~1）。"
+                "请你用中文写一段 3~5 段落的分析师风格报告，"
+                "总结谁更强、各自的优势短板，以及可能的社区演化趋势。"
+                "注意面向非技术评委，语言清晰、结构有小标题。\n\n"
+                f"{numeric_summary}"
+            )
+
+            # 定义更智能的 System Prompt
+            system_prompt = """
 你是一名负责开源生态评估的资深分析师。请根据用户提供的数据写一份深度对比报告。
 
 【内容与格式要求】：
-1) 结构必须清晰：报告必须包含 3-4 个明确的 Markdown 小标题（只能使用 ###，不要用 # 或 ##）。
-   例如：
+1. **结构必须清晰**：报告必须包含 3-4 个明确的 Markdown 小标题（使用 ### 语法），例如：
    ### 📊 总体评分概览
    ### 🚀 各项目核心优势
    ### ⚠️ 潜在风险与短板
    ### 🔮 社区演化趋势
 
-2) 重点灵活高亮：
-   - 识别关键结论/核心对比/犀利洞察，用 **加粗** 标记，但不要全篇加粗。
+2. **重点灵活高亮**：
+   - 请识别报告中的 **关键结论、核心数据对比、或犀利的洞察**。
+   - 将这些句子用 Markdown 加粗符号（**...**）包裹。
+   - ⚠️ 不需要局限于段落开头，哪里重要就标哪里，但不要全文通篇加粗。
 
-3) 结尾强制总结：
-   - 最后必须包含 Markdown 引用块（>），以 “💡 **分析师建议：**” 开头，给出 1-2 句可执行建议。
+3. **结尾强制总结**：
+   - 报告的最后，必须包含一个 Markdown 引用块（使用 > 符号）。
+   - 内容必须以 “💡 **分析师建议：**” 开头，针对不同场景给出 1-2 句具体的选型建议。
+   - 格式示例：
+     > 💡 **分析师建议：** 如果追求稳定性，推荐选择 PyTorch；如果需要快速验证 Agent，LangChain 是更好的选择。
 
-4) 安全与克制：
-   - 只针对项目与数据做评价，不攻击个人与群体，不使用侮辱性措辞。
-""".strip()
+4. **语气风格**：专业、客观、见解独到。
+"""
 
-    # 3) 调用 OpenAI（若可用）
-    if openai_client is not None and os.getenv("OPENAI_API_KEY"):
-        try:
-            user_prompt = (
-                "下面是一组 LLM 相关开源项目在多个生态指标上的归一化得分（0~1）。\n"
-                f"【输出风格】{preset['desc']}。\n"
-                "请用中文写一段 3~5 段落的对比报告：谁更强、各自优势短板、以及可能的社区演化趋势。\n\n"
-                f"{numeric_summary}"
-            )
-
-            system_prompt = BASE_SYSTEM_PROMPT + "\n\n【本次语气风格】\n" + preset["style"] + "\n【结尾建议要求】\n" + preset["ending"]
-
+            # 下面这部分保持不变
             resp = openai_client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt},
+                    {"role": "user", "content": prompt},
                 ],
                 temperature=0.5,
-                timeout=12,
             )
             content = resp.choices[0].message.content
-            return jsonify({"report": content, "from_llm": True, "tone": tone})
+            return jsonify({"report": content, "from_llm": True})
         except Exception as e:
             print("调用 LLM 失败，将使用规则模板：", e)
+    
 
-    # 4) 兜底模板（也带 tone 提示）
-    intro = f"【模式】{preset['desc']}"
+    # 4) 兜底模板
     text_lines = [
-        intro,
+        "【LLM 项目生态概览】",
+        "基于最近 12 个月的开源活动数据，我们对当前选择的 LLM 相关项目进行了五维度的生态健康度评估。",
         "",
-        "### 📊 总体评分概览",
-        "基于最近 12 个月的开源活动数据，我们对所选项目进行了五维度生态健康度评估（0~1 归一化）。",
-        "",
-        "### 🧾 综合得分排序",
+        "一、综合得分排序",
         numeric_summary,
         "",
-        "### ⚠️ 风险与短板",
-        "通常得分偏低的项目更容易出现在治理质量、多样性或可持续性维度，意味着贡献者结构集中、维护压力大或协作流程不稳定。",
+        "二、整体观察",
+        "从得分情况可以看出，排名靠前的项目在活跃度和治理质量上普遍表现较好，说明社区有稳定的贡献者群体以及较完善的协作流程。",
+        "得分相对偏低的项目，通常集中出现在多样性或可持续性维度，可能意味着贡献者结构较集中，或者核心维护者过于少数化。",
         "",
-        "### 🔮 社区演化趋势",
-        "得分靠前的项目往往具备更稳定的社区供给与治理机制，长期演进的确定性更强；得分落后的项目需要优先补齐治理与维护节奏。",
-        "",
-        f"> 💡 **分析师建议：** {preset['ending']}"
+        "三、简单建议",
+        "对于综合得分较高的项目，可以进一步关注如何提升新贡献者的进入体验，巩固多样性优势；",
+        "对于得分偏低的项目，则建议在文档完善、Issue 反馈响应以及社区运营等方面投入更多精力，以提升长期的可持续发展能力。"
     ]
-    return jsonify({"report": "\n".join(text_lines), "from_llm": False, "tone": tone})
-
+    return jsonify({"report": "\n".join(text_lines), "from_llm": False})
 
 # ===========================
 # LLM 项目树接口（新增）
