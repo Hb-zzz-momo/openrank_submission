@@ -26,7 +26,7 @@ def check_repo_availability(platform, org, repo):
     for metric in REQUIRED_METRICS:
         url = BASE_URL.format(platform=platform, org=org, repo=repo, metric=metric)
         try:
-            resp = requests.get(url, timeout=10, verify=False)
+            resp = requests.get(url, timeout=10)
             if resp.status_code == 404:
                 missing_metrics.append(metric)
         except Exception as e:

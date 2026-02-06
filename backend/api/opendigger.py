@@ -13,8 +13,7 @@ from flask import Blueprint, jsonify, request
 from pathlib import Path
 import json
 import requests
-import warnings
-warnings.filterwarnings('ignore', message='Unverified HTTPS request')
+
 from datetime import datetime, timedelta
 from extensions import db
 from models import MetricSeries
@@ -202,7 +201,7 @@ def fetch_and_cache_data_db(api_url: str, platform: str, entity: str, repo: str 
 
     # 2) 缓存没有/过期：请求 OpenDigger（把上游错误转成 ApiException）
     try:
-        resp = requests.get(api_url, timeout=30, verify=False)
+        resp = requests.get(api_url, timeout=30)
         resp.raise_for_status()
     except requests.HTTPError as e:
         code = getattr(e.response, "status_code", None)
