@@ -263,4 +263,4 @@ npm audit fix
 ---
 
 **最后更新:** 2026-02-06  
-**维护者:** GitHub Copilot Security Team
+**维护者:** Hb-zzz-momo / OpenRank Submission Project Team
