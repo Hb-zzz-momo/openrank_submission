@@ -4,6 +4,7 @@ auth 蓝图：专门处理身份认证相关接口：
   - POST /api/auth/register  注册
   - POST /api/auth/login     登录
 """
+import re
 from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
@@ -50,7 +51,6 @@ def register():
         raise ApiException(400, "密码长度至少为8个字符")
     
     # 3. 邮箱格式验证
-    import re
     email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     if not re.match(email_pattern, email):
         raise ApiException(400, "邮箱格式不正确")
