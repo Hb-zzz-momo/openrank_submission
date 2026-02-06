@@ -591,9 +591,9 @@ const closeReportModal = () => {
   reportFullscreen.value = false
 }
 
-// 创建Markdown解析器实例
+// 创建Markdown解析器实例（安全配置）
 const md = new MarkdownIt({
-  html: true,      // 允许HTML标签
+  html: false,     // ✅ 禁止HTML标签以防止XSS（报告内容来自AI，应使用纯Markdown）
   breaks: true,    // 将换行符转换为 <br>
   linkify: true    // 自动将URL转换为链接
 })

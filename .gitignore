@@ -2,6 +2,12 @@ node_modules/
 backend/.venv/
 backend/__pycache__/
 backend/data/
+backend/*.db
+frontend/.env
+frontend/.env.local
+backend/.env
+backend/.env.local
 .env
+.env.local
 .DS_Store
 dist/

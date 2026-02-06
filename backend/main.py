@@ -48,11 +48,19 @@ def create_app():
     db.init_app(app)
     jwt.init_app(app)
 
-    CORS(
-  app,
-  resources={r"/api/*": {"origins": r"^http://(localhost|127\.0\.0\.1):\d+$"}},
-  supports_credentials=True
-)
+    # ✅ CORS 配置：生产环境使用严格的域名白名单
+    allowed_origins = os.getenv("ALLOWED_ORIGINS", "")
+    if allowed_origins:
+        # 生产环境：从环境变量读取允许的域名列表（逗号分隔）
+        origins = [origin.strip() for origin in allowed_origins.split(",")]
+        CORS(app, resources={r"/api/*": {"origins": origins}}, supports_credentials=True)
+    else:
+        # 开发环境：仅允许本地访问
+        CORS(
+            app,
+            resources={r"/api/*": {"origins": ["http://localhost:5173", "http://127.0.0.1:5173"]}},
+            supports_credentials=True
+        )
 
 
     app.register_blueprint(api_bp)

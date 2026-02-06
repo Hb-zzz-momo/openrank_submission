@@ -7,8 +7,7 @@ import json
 import shutil
 from pathlib import Path
 import requests
-import warnings
-warnings.filterwarnings('ignore', message='Unverified HTTPS request')
+
 import time
 from extensions import db
 from models import MetricSeries
@@ -212,7 +211,7 @@ def sync_opendigger_data():
                 api_url = base_url.format(platform=platform, org=org, repo=repo, metric=metric)
 
                 try:
-                    resp = requests.get(api_url, timeout=30, verify=False)
+                    resp = requests.get(api_url, timeout=30)
                     resp.raise_for_status()
                     data = resp.json()
 
