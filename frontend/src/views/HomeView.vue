@@ -10,7 +10,6 @@
         </p>
       </div>
       <div class="header-tags">
-        <span class="tag">OpenRank 赛题</span>
         <span class="tag tag-secondary">数据源：OpenDigger</span>
       </div>
     </header>

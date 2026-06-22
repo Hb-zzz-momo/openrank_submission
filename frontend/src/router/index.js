@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import FavoritesView from '@/views/FavoritesView.vue'
 import LLMSummaryView from '../views/LLMSummaryView.vue'
+import LLMVisualLabView from '../views/LLMVisualLabView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 
@@ -19,6 +20,12 @@ const router = createRouter({
       name: 'llm-summary',
       component: LLMSummaryView,
       meta: { keepAlive: true } // ✅ 汇总看板保活：不重复拉 summary
+    },
+    {
+      path: '/llm-visual-lab/:chartId?',
+      name: 'llm-visual-lab',
+      component: LLMVisualLabView,
+      meta: { keepAlive: true } // ✅ 可视化工坊保活：切换图表不重复拉 summary
     },
     {
       path: '/favorites',

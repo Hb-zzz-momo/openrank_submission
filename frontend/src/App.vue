@@ -5,6 +5,13 @@
       <nav class="app-nav">
         <router-link to="/" class="nav-link">首页大屏</router-link>
         <router-link to="/llm-summary" class="nav-link">LLM 生态看板</router-link>
+        <router-link
+          to="/llm-visual-lab"
+          class="nav-link"
+          :class="{ 'is-active': route.name === 'llm-visual-lab' }"
+        >
+          可视化工坊
+        </router-link>
         <router-link to="/favorites" class="nav-link">我的收藏</router-link>
         <span class="nav-divider"></span>
         <!-- 未登录：显示登录/注册 -->
@@ -97,7 +104,7 @@ const onMouseMove = (e) => {
 
 // 只在“非登录/注册页”显示
 watch(() => route.path, (p) => {
-  showCursorBrand.value = !['/login', '/register'].includes(p)
+  showCursorBrand.value = !['/login', '/register'].includes(p) && !p.startsWith('/llm-visual-lab')
 }, { immediate: true })
 
 onMounted(() => {
@@ -152,6 +159,7 @@ onBeforeUnmount(() => {
 
 .app-nav {
   display: flex;
+  align-items: center;
   gap: 1rem;
 }
 
@@ -172,7 +180,8 @@ onBeforeUnmount(() => {
 }
 
 /* 激活状态的链接样式 */
-.nav-link.router-link-exact-active {
+.nav-link.router-link-exact-active,
+.nav-link.is-active {
   color: var(--primary-color);
   background-color: var(--primary-color-light);
 }
@@ -230,6 +239,46 @@ onBeforeUnmount(() => {
   backdrop-filter: blur(6px);
 
   transition: none
+}
+
+@media (max-width: 760px) {
+  .app-header {
+    height: auto;
+    min-height: 64px;
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .logo {
+    font-size: 1.05rem;
+    line-height: 1.2;
+  }
+
+  .app-nav {
+    width: 100%;
+    gap: 0.35rem;
+    overflow-x: auto;
+    padding-bottom: 0.2rem;
+  }
+
+  .nav-link {
+    flex: 0 0 auto;
+    padding: 0.38rem 0.6rem;
+    font-size: 0.86rem;
+    white-space: nowrap;
+  }
+
+  .nav-divider {
+    display: none;
+  }
+
+  .nav-user,
+  .nav-logout {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
 }
 
 </style>
